@@ -109,14 +109,6 @@ func main() {
 					"type":        "string",
 					"description": "The alert message content",
 				},
-				"icon": map[string]interface{}{
-					"type":        "string",
-					"description": "Path to an icon file (optional)",
-				},
-				"sound": map[string]interface{}{
-					"type":        "string",
-					"description": "Path to a sound file to play with the alert (optional)",
-				},
 			},
 			Required: []string{"title", "message"},
 		},
@@ -149,30 +141,21 @@ func handleAlert(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToo
 		}, nil
 	}
 
-	// Send alert - using beeep.Alert for more prominent notification
-	var alertErr error
-	if req.Icon != "" {
-		alertErr = beeep.Alert(req.Title, req.Message, req.Icon)
-	} else {
-		alertErr = beeep.Alert(req.Title, req.Message, "")
-	}
+	// Send notification - using beeep.Notify without sound
+	notifyErr := beeep.Notify(req.Title, req.Message, "")
 
-	if alertErr != nil {
+	if notifyErr != nil {
 		return &mcp.CallToolResult{
 			IsError: true,
 			Content: []mcp.Content{
-				mcp.NewTextContent(fmt.Sprintf("Failed to send alert: %v", alertErr)),
+				mcp.NewTextContent(fmt.Sprintf("Failed to send notification: %v", notifyErr)),
 			},
 		}, nil
 	}
 
-	// Play sound if specified (for alerts, default to @sound.mp3)
-	soundToPlay := req.Sound
-	if soundToPlay == "" {
-		soundToPlay = "@sound.mp3"
-	}
-	if soundErr := playSound(soundToPlay); soundErr != nil {
-		log.Printf("Warning: Failed to play sound '%s': %v", soundToPlay, soundErr)
+	// Play embedded sound with alerts
+	if soundErr := playSound("@sound.mp3"); soundErr != nil {
+		log.Printf("Warning: Failed to play sound: %v", soundErr)
 	}
 
 	return &mcp.CallToolResult{
