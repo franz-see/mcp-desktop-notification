@@ -319,12 +319,7 @@ Send a desktop notification with embedded audio.
 - `title` (required): Notification title
 - `message` (required): Notification message
 
-**Audio:** Automatically plays embedded sound.mp3 file with each notification.
-
-<audio controls>
-  <source src="sound.mp3" type="audio/mpeg">
-  <p>🎵 Preview notification sound (sound.mp3)</p>
-</audio>  
+**Audio:** Automatically plays embedded [sound.mp3](sound.mp3) file with each notification.
 
 ## Manual Dev Testing
 
