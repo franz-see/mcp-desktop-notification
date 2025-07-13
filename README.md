@@ -321,8 +321,6 @@ Send a desktop notification with embedded audio.
 
 **Audio:** Automatically plays embedded [sound.mp3](sound.mp3) file with each notification.
 
-https://raw.githubusercontent.com/franz-see/mcp-desktop-notification/refs/heads/main/sound.mp3
-
 ## Manual Dev Testing
 
 ```
