@@ -4,6 +4,12 @@ A Model Context Protocol (MCP) server that provides desktop notification capabil
 
 Useful to add as an instruction to notify you every time an instruction has finished. That way, you can move to a different window and get notified once the instruction is done
 
+_For example_
+
+```
+$ Whenever you finish an instruction, notify using desktop-notification mcp tool
+```
+
 ## Features
 
 - **Desktop Notifications**: Send notifications with title and message
@@ -313,7 +319,12 @@ Send a desktop notification with embedded audio.
 - `title` (required): Notification title
 - `message` (required): Notification message
 
-**Audio:** Automatically plays embedded sound.mp3 file with each notification.  
+**Audio:** Automatically plays embedded sound.mp3 file with each notification.
+
+<audio controls>
+  <source src="sound.mp3" type="audio/mpeg">
+  <p>🎵 Preview notification sound (sound.mp3)</p>
+</audio>  
 
 ## Manual Dev Testing
 
