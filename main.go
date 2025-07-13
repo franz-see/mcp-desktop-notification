@@ -2,10 +2,13 @@ package main
 
 import (
 	"context"
+	_ "embed"
 	"encoding/json"
 	"fmt"
 	"log"
+	"os"
 	"os/exec"
+	"path/filepath"
 	"runtime"
 	"strconv"
 	"strings"
@@ -15,6 +18,9 @@ import (
 	"github.com/mark3labs/mcp-go/server"
 )
 
+//go:embed sound.mp3
+var embeddedSound []byte
+
 type NotificationRequest struct {
 	Title   string `json:"title"`
 	Message string `json:"message"`
@@ -22,10 +28,26 @@ type NotificationRequest struct {
 	Sound   string `json:"sound,omitempty"`
 }
 
-// playSound plays a sound file or system beep
+// playSound plays a sound file or system beep without using oto/go-mp3
 func playSound(sound string) error {
 	if sound == "" {
 		return nil
+	}
+
+	// Handle embedded sound
+	if sound == "@sound.mp3" || sound == "sound.mp3" {
+		// Create temporary file from embedded data
+		tmpDir := os.TempDir()
+		tmpFile := filepath.Join(tmpDir, "notification_sound.mp3")
+
+		if err := os.WriteFile(tmpFile, embeddedSound, 0644); err != nil {
+			return fmt.Errorf("failed to write temp sound file: %v", err)
+		}
+
+		// Clean up temp file after playing
+		defer os.Remove(tmpFile)
+
+		sound = tmpFile
 	}
 
 	// Check if it's a frequency beep (e.g., "beep:440" for 440Hz)
@@ -40,10 +62,10 @@ func playSound(sound string) error {
 
 	// Check if it's a system beep
 	if sound == "beep" || sound == "system" {
-		return beeep.Beep(beeep.DefaultFreq, 200)
+		return beeep.Beep(800.0, 300) // High pitch notification sound (800Hz, 300ms)
 	}
 
-	// Try to play as a sound file using system commands
+	// For MP3 and other files, use system commands instead of oto
 	switch runtime.GOOS {
 	case "darwin": // macOS
 		return exec.Command("afplay", sound).Run()
@@ -72,37 +94,9 @@ func main() {
 		server.WithLogging(),
 	)
 
-	// Register notification tool
+	// Register notification tool (alias for notification with different styling)
 	s.AddTool(mcp.Tool{
 		Name:        "send_notification",
-		Description: "Send a desktop notification",
-		InputSchema: mcp.ToolInputSchema{
-			Type: "object",
-			Properties: map[string]interface{}{
-				"title": map[string]interface{}{
-					"type":        "string",
-					"description": "The title of the notification",
-				},
-				"message": map[string]interface{}{
-					"type":        "string",
-					"description": "The message content of the notification",
-				},
-				"icon": map[string]interface{}{
-					"type":        "string",
-					"description": "Path to an icon file (optional)",
-				},
-				"sound": map[string]interface{}{
-					"type":        "string",
-					"description": "Path to a sound file to play with the notification (optional)",
-				},
-			},
-			Required: []string{"title", "message"},
-		},
-	}, handleNotification)
-
-	// Register alert tool (alias for notification with different styling)
-	s.AddTool(mcp.Tool{
-		Name:        "send_alert",
 		Description: "Send a desktop alert notification (typically more urgent)",
 		InputSchema: mcp.ToolInputSchema{
 			Type: "object",
@@ -132,58 +126,6 @@ func main() {
 	if err := server.ServeStdio(s); err != nil {
 		log.Fatalf("Server error: %v", err)
 	}
-}
-
-func handleNotification(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-	var req NotificationRequest
-	argBytes, err := json.Marshal(request.Params.Arguments)
-	if err != nil {
-		return &mcp.CallToolResult{
-			IsError: true,
-			Content: []mcp.Content{
-				mcp.NewTextContent(fmt.Sprintf("Failed to parse arguments: %v", err)),
-			},
-		}, nil
-	}
-
-	if err := json.Unmarshal(argBytes, &req); err != nil {
-		return &mcp.CallToolResult{
-			IsError: true,
-			Content: []mcp.Content{
-				mcp.NewTextContent(fmt.Sprintf("Failed to parse notification request: %v", err)),
-			},
-		}, nil
-	}
-
-	// Send notification
-	var notifyErr error
-	if req.Icon != "" {
-		notifyErr = beeep.Notify(req.Title, req.Message, req.Icon)
-	} else {
-		notifyErr = beeep.Notify(req.Title, req.Message, "")
-	}
-
-	if notifyErr != nil {
-		return &mcp.CallToolResult{
-			IsError: true,
-			Content: []mcp.Content{
-				mcp.NewTextContent(fmt.Sprintf("Failed to send notification: %v", notifyErr)),
-			},
-		}, nil
-	}
-
-	// Play sound if specified
-	if req.Sound != "" {
-		if soundErr := playSound(req.Sound); soundErr != nil {
-			log.Printf("Warning: Failed to play sound '%s': %v", req.Sound, soundErr)
-		}
-	}
-
-	return &mcp.CallToolResult{
-		Content: []mcp.Content{
-			mcp.NewTextContent(fmt.Sprintf("Successfully sent notification: '%s'", req.Title)),
-		},
-	}, nil
 }
 
 func handleAlert(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
@@ -224,10 +166,10 @@ func handleAlert(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToo
 		}, nil
 	}
 
-	// Play sound if specified (for alerts, default to system beep if no sound specified)
+	// Play sound if specified (for alerts, default to @sound.mp3)
 	soundToPlay := req.Sound
 	if soundToPlay == "" {
-		soundToPlay = "beep" // Default sound for alerts
+		soundToPlay = "@sound.mp3"
 	}
 	if soundErr := playSound(soundToPlay); soundErr != nil {
 		log.Printf("Warning: Failed to play sound '%s': %v", soundToPlay, soundErr)
