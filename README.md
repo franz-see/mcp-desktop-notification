@@ -1,15 +1,12 @@
 # MCP Desktop Notification Server
 
-A Model Context Protocol (MCP) server that provides desktop notification capabilities with sound support.
+A Model Context Protocol (MCP) server that provides desktop notification capabilities. 
+
+Useful to add as an instruction to notify you every time an instruction has finished. That way, you can move to a different window and get notified once the instruction is done
 
 ## Features
 
-- **Desktop Notifications**: Send notifications using `beeep` library
-- **Sound Support**: Play notification sounds with multiple options:
-  - System beep sounds (`"beep"`, `"system"`)  
-  - Custom frequency beeps (`"beep:440"` for 440Hz)
-  - MP3 file playback using native Go libraries (`@sound.mp3`)
-  - Other audio formats via system commands
+- **Desktop Notifications**: Send notifications with title and message and audio cue
 - **Cross-platform**: Works on macOS, Linux, and Windows
 - **MCP Integration**: Ready for use with Claude Code and other MCP clients
 
@@ -46,17 +43,8 @@ Send a standard desktop notification.
 **Parameters:**
 - `title` (required): Notification title
 - `message` (required): Notification message  
-- `icon` (optional): Path to icon file
-- `sound` (optional): Sound to play (defaults to `@sound.mp3`)
 
-### Sound Options
-
-- `"beep"` or `"system"` - High-pitch system beep (800Hz)
-- `"beep:440"` - Custom frequency beep (440Hz example)
-- `"@sound.mp3"` - MP3 file (played with system audio commands)
-- `"/path/to/file.wav"` - Other audio formats (via system commands)
-
-## Testing
+## Manual Dev Testing
 
 ```
 # Start the server
