@@ -13,6 +13,14 @@ export function getNotificationContent(hookInput: ClaudeHookInput): Notification
   let message: string;
   const sound = '@sound.mp3';
 
+  // Format CWD for display
+  const formatCwd = (cwd: string): string => {
+    if (cwd.length > 50) {
+      return `...${cwd.slice(-50)}`;
+    }
+    return cwd;
+  };
+
   switch (hookInput.hook_event_name) {
     case 'PreToolUse':
       title = `[PreToolUse] Claude Code: ${hookInput.tool_name}`;
@@ -105,6 +113,12 @@ export function getNotificationContent(hookInput: ClaudeHookInput): Notification
       if (hookInput.tool_name) {
         message = `${message} (Tool: ${hookInput.tool_name})`;
       }
+  }
+
+  // Append CWD to all messages
+  if (hookInput.cwd) {
+    const formattedCwd = formatCwd(hookInput.cwd);
+    message = `${message}\n\ncwd: ${formattedCwd}`;
   }
 
   return { title, message, sound };
