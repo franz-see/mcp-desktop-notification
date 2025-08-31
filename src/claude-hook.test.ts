@@ -13,8 +13,8 @@ describe('getNotificationContent', () => {
 
     const result = getNotificationContent(input);
 
-    expect(result.title).toBe('Claude Code: Bash');
-    expect(result.message).toBe('Preparing to run Bash');
+    expect(result.title).toBe('[PreToolUse] Claude Code: Bash');
+    expect(result.message).toBe('Preparing to run Bash\n\ncwd: /current/dir');
     expect(result.sound).toBe('@sound.mp3');
   });
 
@@ -29,8 +29,8 @@ describe('getNotificationContent', () => {
 
     const result = getNotificationContent(input);
 
-    expect(result.title).toBe('✓ Edit Completed');
-    expect(result.message).toBe('Edit tool finished executing');
+    expect(result.title).toBe('[PostToolUse] ✓ Edit Completed');
+    expect(result.message).toBe('Edit tool finished executing\n\ncwd: /current/dir');
     expect(result.sound).toBe('@sound.mp3');
   });
 
@@ -53,8 +53,8 @@ describe('getNotificationContent', () => {
 
     const result = getNotificationContent(input);
 
-    expect(result.title).toBe('✓ Write Completed');
-    expect(result.message).toBe('Write tool finished executing');
+    expect(result.title).toBe('[PostToolUse] ✓ Write Completed');
+    expect(result.message).toBe('Write tool finished executing\n\ncwd: /Users/mcp-desktop-notification/main');
     expect(result.sound).toBe('@sound.mp3');
   });
 
@@ -69,8 +69,8 @@ describe('getNotificationContent', () => {
 
     const result = getNotificationContent(input);
 
-    expect(result.title).toBe('Claude Code');
-    expect(result.message).toBe('Processing: Write a function to calculate the factorial of a n...');
+    expect(result.title).toBe('[UserPromptSubmit] Claude Code');
+    expect(result.message).toBe('Processing: Write a function to calculate the factorial of a n...\n\ncwd: /Users/mcp-desktop-notification/main');
     expect(result.sound).toBe('@sound.mp3');
   });
 
@@ -85,8 +85,8 @@ describe('getNotificationContent', () => {
 
     const result = getNotificationContent(input);
 
-    expect(result.title).toBe('Claude Code');
-    expect(result.message).toBe('Processing: This is a very long prompt that exceeds fifty char...');
+    expect(result.title).toBe('[UserPromptSubmit] Claude Code');
+    expect(result.message).toBe('Processing: This is a very long prompt that exceeds fifty char...\n\ncwd: /current/dir');
     expect(result.sound).toBe('@sound.mp3');
   });
 
@@ -100,8 +100,8 @@ describe('getNotificationContent', () => {
 
     const result = getNotificationContent(input);
 
-    expect(result.title).toBe('Claude Code');
-    expect(result.message).toBe('Processing your request...');
+    expect(result.title).toBe('[UserPromptSubmit] Claude Code');
+    expect(result.message).toBe('Processing your request...\n\ncwd: /current/dir');
     expect(result.sound).toBe('@sound.mp3');
   });
 
@@ -116,8 +116,8 @@ describe('getNotificationContent', () => {
 
     const result = getNotificationContent(input);
 
-    expect(result.title).toBe('Claude Code Notification');
-    expect(result.message).toBe('Task completed successfully');
+    expect(result.title).toBe('[Notification] Claude Code Notification');
+    expect(result.message).toBe('Task completed successfully\n\ncwd: /Users/mcp-desktop-notification/main');
     expect(result.sound).toBe('@sound.mp3');
   });
 
@@ -131,8 +131,8 @@ describe('getNotificationContent', () => {
 
     const result = getNotificationContent(input);
 
-    expect(result.title).toBe('Claude Code Notification');
-    expect(result.message).toBe('Notification received');
+    expect(result.title).toBe('[Notification] Claude Code Notification');
+    expect(result.message).toBe('Notification received\n\ncwd: /current/dir');
     expect(result.sound).toBe('@sound.mp3');
   });
 
@@ -147,8 +147,8 @@ describe('getNotificationContent', () => {
 
     const result = getNotificationContent(input);
 
-    expect(result.title).toBe('Claude Code');
-    expect(result.message).toBe('Response completed (hook active)');
+    expect(result.title).toBe('[Stop] Claude Code');
+    expect(result.message).toBe('Response completed (hook active)\n\ncwd: /Users/mcp-desktop-notification/main');
     expect(result.sound).toBe('@sound.mp3');
   });
 
@@ -163,8 +163,8 @@ describe('getNotificationContent', () => {
 
     const result = getNotificationContent(input);
 
-    expect(result.title).toBe('Claude Code');
-    expect(result.message).toBe('Response completed');
+    expect(result.title).toBe('[Stop] Claude Code');
+    expect(result.message).toBe('Response completed\n\ncwd: /current/dir');
     expect(result.sound).toBe('@sound.mp3');
   });
 
@@ -179,8 +179,8 @@ describe('getNotificationContent', () => {
 
     const result = getNotificationContent(input);
 
-    expect(result.title).toBe('Claude Code Session');
-    expect(result.message).toBe('Session started (startup)');
+    expect(result.title).toBe('[SessionStart] Claude Code Session');
+    expect(result.message).toBe('Session started (startup)\n\ncwd: /Users/mcp-desktop-notification/main');
     expect(result.sound).toBe('@sound.mp3');
   });
 
@@ -195,8 +195,8 @@ describe('getNotificationContent', () => {
 
     const result = getNotificationContent(input);
 
-    expect(result.title).toBe('Claude Code Session');
-    expect(result.message).toBe('Session ended: exit');
+    expect(result.title).toBe('[SessionEnd] Claude Code Session');
+    expect(result.message).toBe('Session ended: exit\n\ncwd: /Users/mcp-desktop-notification/main');
     expect(result.sound).toBe('@sound.mp3');
   });
 
@@ -213,7 +213,7 @@ describe('getNotificationContent', () => {
     const result = getNotificationContent(input);
 
     expect(result.title).toBe('Claude Code');
-    expect(result.message).toBe('Starting compact (manual)');
+    expect(result.message).toBe('Starting compact (manual)\n\ncwd: /Users/mcp-desktop-notification/main');
     expect(result.sound).toBe('@sound.mp3');
   });
 
@@ -229,7 +229,7 @@ describe('getNotificationContent', () => {
     const result = getNotificationContent(input);
 
     expect(result.title).toBe('Claude Code');
-    expect(result.message).toBe('Starting context compaction: This is a very long custom ins...');
+    expect(result.message).toBe('Starting context compaction: This is a very long custom ins...\n\ncwd: /current/dir');
     expect(result.sound).toBe('@sound.mp3');
   });
 
@@ -244,8 +244,8 @@ describe('getNotificationContent', () => {
 
     const result = getNotificationContent(input);
 
-    expect(result.title).toBe('Claude Code Hook');
-    expect(result.message).toBe('Event: UnknownEvent (Tool: CustomTool)');
+    expect(result.title).toBe('UnknownEvent Claude Code Hook');
+    expect(result.message).toBe('Event: UnknownEvent (Tool: CustomTool)\n\ncwd: /current/dir');
     expect(result.sound).toBe('@sound.mp3');
   });
 
@@ -259,8 +259,8 @@ describe('getNotificationContent', () => {
 
     const result = getNotificationContent(input);
 
-    expect(result.title).toBe('Claude Code Hook');
-    expect(result.message).toBe('Hook event triggered');
+    expect(result.title).toBe(' Claude Code Hook');
+    expect(result.message).toBe('Hook event triggered\n\ncwd: /current/dir');
     expect(result.sound).toBe('@sound.mp3');
   });
 });
