@@ -99,9 +99,6 @@ Integrate with Claude Code to receive notifications for various events during yo
 # For specific events
 npx mcp-desktop-notification --claude-hook
 
-# Or if installed globally
-mcp-desktop-notification --claude-hook
-
 # With verbose output for debugging
 npx mcp-desktop-notification --claude-hook --verbose
 ```
@@ -112,14 +109,14 @@ The notification server handles these Claude Code events:
 
 | Event | Notification Title | Description |
 |-------|-------------------|-------------|
-| `PreToolUse` | Claude Code: [Tool Name] | Before a tool executes |
-| `PostToolUse` | ✓ [Tool Name] Completed | After a tool finishes |
-| `UserPromptSubmit` | Claude Code | When you submit a prompt |
-| `Notification` | Claude Code Notification | Custom notifications |
-| `Stop` | Claude Code | Response completed |
-| `SubagentStop` | Claude Code Subagent | Subagent task completed |
-| `SessionStart` | Claude Code Session | New session started |
-| `SessionEnd` | Claude Code Session | Session ended |
+| `PreToolUse` | [PreToolUse] Claude Code: [Tool Name] | Before a tool executes |
+| `PostToolUse` | [PostToolUse] ✓ [Tool Name] Completed | After a tool finishes |
+| `UserPromptSubmit` | [UserPromptSubmit] Claude Code | When you submit a prompt |
+| `Notification` | [Notification] Claude Code Notification | Custom notifications |
+| `Stop` | [Stop] Claude Code | Response completed |
+| `SubagentStop` | [SubAgentStop] Claude Code Subagent | Subagent task completed |
+| `SessionStart` | [SessionStart] Claude Code Session | New session started |
+| `SessionEnd` | [SessionEnd] Claude Code Session | Session ended |
 | `PreCompact` | Claude Code | Context compaction starting |
 
 #### Example Hook Configuration
@@ -188,19 +185,21 @@ npx mcp-desktop-notification --title "Alert" --message "Custom sound" --sound ~/
 ### Project Structure
 
 ```
-mcp-desktop-notification-ts/
+mcp-desktop-notification/
 ├── src/
 │   ├── index.ts           # Main entry point
 │   ├── types.ts           # TypeScript interfaces
 │   ├── notification.ts    # Notification handling
 │   ├── sound.ts          # Sound playback logic
 │   ├── claude-hook.ts    # Claude hook processor
+│   ├── claude-hook.test.ts # Tests for Claude hook processor
 │   └── mcp-server.ts     # MCP server implementation
 ├── assets/
 │   └── sound.mp3         # Default notification sound
 ├── dist/                 # Compiled JavaScript
 ├── package.json
 ├── tsconfig.json
+├── jest.config.js        # Jest test configuration
 └── README.md
 ```
 
@@ -221,6 +220,9 @@ npm run claude-hook
 
 # Start compiled version
 npm start -- --title "Test" --message "Hello"
+
+# Run tests
+npm test
 ```
 
 ### Testing
