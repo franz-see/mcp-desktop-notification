@@ -15,7 +15,7 @@ export function getNotificationContent(hookInput: ClaudeHookInput): Notification
 
   switch (hookInput.hook_event_name) {
     case 'PreToolUse':
-      title = `Claude Code: ${hookInput.tool_name}`;
+      title = `[PreToolUse] Claude Code: ${hookInput.tool_name}`;
       message = `Preparing to run ${hookInput.tool_name}`;
 
       if (hookInput.tool_input?.command) {
@@ -24,7 +24,7 @@ export function getNotificationContent(hookInput: ClaudeHookInput): Notification
       break;
 
     case 'PostToolUse':
-      title = `✓ ${hookInput.tool_name} Completed`;
+      title = `[PostToolUse] ✓ ${hookInput.tool_name} Completed`;
       message = `${hookInput.tool_name} tool finished executing`;
 
       if (hookInput.tool_input?.command) {
@@ -33,7 +33,7 @@ export function getNotificationContent(hookInput: ClaudeHookInput): Notification
       break;
 
     case 'UserPromptSubmit':
-      title = 'Claude Code';
+      title = '[UserPromptSubmit] Claude Code';
       message = 'Processing your request...';
 
       if (hookInput.prompt) {
@@ -46,7 +46,7 @@ export function getNotificationContent(hookInput: ClaudeHookInput): Notification
       break;
 
     case 'Notification':
-      title = 'Claude Code Notification';
+      title = '[Notification] Claude Code Notification';
       message = hookInput.message || 'Notification received';
 
       if (hookInput.tool_input?.command) {
@@ -55,28 +55,28 @@ export function getNotificationContent(hookInput: ClaudeHookInput): Notification
       break;
 
     case 'Stop':
-      title = 'Claude Code';
+      title = '[Stop] Claude Code';
       message = hookInput.stop_hook_active
         ? 'Response completed (hook active)'
         : 'Response completed';
       break;
 
     case 'SubagentStop':
-      title = 'Claude Code Subagent';
+      title = '[SubAgentStop] Claude Code Subagent';
       message = hookInput.stop_hook_active
         ? 'Subagent task completed (hook active)'
         : 'Subagent task completed';
       break;
 
     case 'SessionStart':
-      title = 'Claude Code Session';
+      title = '[SessionStart] Claude Code Session';
       message = hookInput.source
         ? `Session started (${hookInput.source})`
         : 'Session started';
       break;
 
     case 'SessionEnd':
-      title = 'Claude Code Session';
+      title = '[SessionEnd] Claude Code Session';
       message = hookInput.reason
         ? `Session ended: ${hookInput.reason}`
         : 'Session ended';
@@ -97,7 +97,7 @@ export function getNotificationContent(hookInput: ClaudeHookInput): Notification
       break;
 
     default:
-      title = 'Claude Code Hook';
+      title = `${hookInput.hook_event_name} Claude Code Hook`;
       message = hookInput.hook_event_name
         ? `Event: ${hookInput.hook_event_name}`
         : 'Hook event triggered';
