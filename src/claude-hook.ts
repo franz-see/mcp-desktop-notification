@@ -1,5 +1,6 @@
 import { ClaudeHookInput } from './types';
 import { sendNotification } from './notification';
+import path from 'path';
 
 export interface NotificationContent {
   title: string;
@@ -16,6 +17,10 @@ export function getNotificationContent(hookInput: ClaudeHookInput): Notification
     case 'PreToolUse':
       title = `Claude Code: ${hookInput.tool_name}`;
       message = `Preparing to run ${hookInput.tool_name}`;
+
+      if (hookInput.tool_input?.command) {
+        message = `${message}: ${hookInput.tool_input.command}`;
+      }
       break;
 
     case 'PostToolUse':

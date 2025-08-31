@@ -9,6 +9,10 @@ export async function sendNotification(
 ): Promise<void> {
   const soundToPlay = sound || '@sound.mp3';
 
+  if (sound && sound !== '@sound.mp3') {
+    console.log(`[mcp-desktop-notification] Using custom sound: ${sound}`);
+  }
+
   const soundPromise = playSound(soundToPlay).catch((err) => {
     console.warn(`[mcp-desktop-notification] Warning: Failed to play sound: ${err}`);
   });
