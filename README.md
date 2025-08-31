@@ -2,6 +2,43 @@
 
 A desktop notification server that can work either as an MCP (Model Context Protocol) server and a Claude Code hook processor. Send desktop notifications with sound alerts from your AI assistants or command line.
 
+## Table of Contents
+
+- [Features](#features)
+- [Installation](#installation)
+  - [Prerequisites](#prerequisites)
+  - [Setup](#setup)
+  - [Development Setup](#development-setup-for-contributors)
+- [Usage Modes](#usage-modes)
+  - [1. Command Line Interface (CLI)](#1-command-line-interface-cli)
+  - [2. MCP Server Mode](#2-mcp-server-mode)
+  - [3. Claude Code Hook Mode](#3-claude-code-hook-mode)
+- [Sound Configuration](#sound-configuration)
+  - [Default Sound](#default-sound)
+  - [Custom Sounds](#custom-sounds)
+  - [Adding Your Own Sound](#adding-your-own-sound)
+- [Development](#development)
+  - [Project Structure](#project-structure)
+  - [Available Scripts](#available-scripts)
+  - [Testing](#testing)
+- [Platform Support](#platform-support)
+  - [macOS](#macos)
+  - [Linux](#linux)
+  - [Windows](#windows)
+- [Troubleshooting](#troubleshooting)
+  - [Notifications not appearing](#notifications-not-appearing)
+  - [Sound not playing](#sound-not-playing)
+  - [MCP server not connecting](#mcp-server-not-connecting)
+  - [Claude hooks not working](#claude-hooks-not-working)
+- [Publishing to npm](#publishing-to-npm)
+  - [Prerequisites for Publishing](#prerequisites-for-publishing)
+  - [Publishing Steps](#publishing-steps)
+  - [First-time Publishing](#first-time-publishing)
+  - [Verifying Publication](#verifying-publication)
+- [Contributing](#contributing)
+- [License](#license)
+- [Acknowledgments](#acknowledgments)
+
 ## Features
 
 - 🔔 Desktop notifications with customizable title and message
@@ -10,6 +47,37 @@ A desktop notification server that can work either as an MCP (Model Context Prot
 - 🪝 Claude Code hook processor for event notifications
 - 💻 Command-line interface for direct usage
 - 🌍 Cross-platform support (macOS, Linux, Windows)
+
+## Installation
+
+### Prerequisites
+
+- Node.js v18 or higher
+- npm or yarn
+
+### Setup
+
+```bash
+# Install globally from npm
+npm install -g mcp-desktop-notification
+
+# Or use directly with npx (no installation needed)
+npx mcp-desktop-notification --title "Hello" --message "World"
+```
+
+### Development Setup (for contributors)
+
+```bash
+# Clone the repository
+git clone https://github.com/franz-see/mcp-desktop-notification
+cd mcp-desktop-notification
+
+# Install dependencies
+npm install
+
+# Build the project
+npm run build
+```
 
 ## Usage Modes
 
