@@ -26,6 +26,10 @@ export function getNotificationContent(hookInput: ClaudeHookInput): Notification
     case 'PostToolUse':
       title = `✓ ${hookInput.tool_name} Completed`;
       message = `${hookInput.tool_name} tool finished executing`;
+
+      if (hookInput.tool_input?.command) {
+        message = `${message}: ${hookInput.tool_input.command}`;
+      }
       break;
 
     case 'UserPromptSubmit':
