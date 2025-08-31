@@ -48,6 +48,10 @@ export function getNotificationContent(hookInput: ClaudeHookInput): Notification
     case 'Notification':
       title = 'Claude Code Notification';
       message = hookInput.message || 'Notification received';
+
+      if (hookInput.tool_input?.command) {
+        message = `${message}: ${hookInput.tool_input.command}`;
+      }
       break;
 
     case 'Stop':
