@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "mcp-desktop-notification": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["dist/index.js", "--server"],
+      "env": {}
+    }
+  }
+}
