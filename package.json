@@ -1,6 +1,6 @@
 {
   "name": "mcp-desktop-notification",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MCP Desktop Notification Server in TypeScript",
   "license": "ISC",
   "author": "",

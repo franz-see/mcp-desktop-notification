@@ -11,30 +11,6 @@ A desktop notification server that can work either as an MCP (Model Context Prot
 - 💻 Command-line interface for direct usage
 - 🌍 Cross-platform support (macOS, Linux, Windows)
 
-## Installation
-
-### Prerequisites
-
-- Node.js v18 or higher
-- npm or yarn
-
-### Setup
-
-```bash
-# Clone the repository
-git clone https://github.com/franz-see/mcp-desktop-notification
-cd mcp-desktop-notification
-
-# Install dependencies
-npm install
-
-# Build the project
-npm run build
-
-# Optional: Install globally
-npm install -g .
-```
-
 ## Usage Modes
 
 ### 1. Command Line Interface (CLI)
@@ -43,16 +19,14 @@ Send notifications directly from the terminal:
 
 ```bash
 # Basic notification
-node dist/index.js --title "Build Complete" --message "Your project has been built successfully"
+npx mcp-desktop-notification --title "Build Complete" --message "Your project has been built successfully"
 
 # With custom sound
-node dist/index.js --title "Alert" --message "Important notification" --sound beep
+npx mcp-desktop-notification --title "Alert" --message "Important notification" --sound beep
 
 # With icon (path to image file)
-node dist/index.js --title "Info" --message "Check this out" --icon /path/to/icon.png
+npx mcp-desktop-notification --title "Info" --message "Check this out" --icon /path/to/icon.png
 
-# If installed globally
-mcp-desktop-notification --title "Hello" --message "World"
 ```
 
 #### CLI Options
@@ -81,22 +55,8 @@ Use as an MCP server for AI assistants like Claude Desktop.
 {
   "mcpServers": {
     "desktop-notification": {
-      "command": "node",
-      "args": ["/absolute/path/to/dist/index.js", "--server"],
-      "env": {}
-    }
-  }
-}
-```
-
-Or if installed globally:
-
-```json
-{
-  "mcpServers": {
-    "desktop-notification": {
-      "command": "mcp-desktop-notification",
-      "args": ["--server"],
+      "command": "npx",
+      "args": ["mcp-desktop-notification", "--server"],
       "env": {}
     }
   }
@@ -137,13 +97,13 @@ Integrate with Claude Code to receive notifications for various events during yo
 
 ```bash
 # For specific events
+npx mcp-desktop-notification --claude-hook
+
+# Or if installed globally
 mcp-desktop-notification --claude-hook
 
-# Or using the full path
-node /path/to/dist/index.js --claude-hook
-
 # With verbose output for debugging
-node /path/to/dist/index.js --claude-hook --verbose
+npx mcp-desktop-notification --claude-hook --verbose
 ```
 
 #### Supported Hook Events
@@ -169,9 +129,9 @@ In your Claude Code settings or configuration file:
 ```json
 {
   "hooks": {
-    "PostToolUse": "mcp-desktop-notification --claude-hook",
-    "UserPromptSubmit": "mcp-desktop-notification --claude-hook",
-    "Stop": "mcp-desktop-notification --claude-hook"
+    "PostToolUse": "npx mcp-desktop-notification --claude-hook",
+    "UserPromptSubmit": "npx mcp-desktop-notification --claude-hook",
+    "Stop": "npx mcp-desktop-notification --claude-hook"
   }
 }
 ```
@@ -182,13 +142,13 @@ You can test the hook processor manually:
 
 ```bash
 # Test PostToolUse event
-echo '{"hook_event_name":"PostToolUse","tool_name":"Bash"}' | node dist/index.js --claude-hook
+echo '{"hook_event_name":"PostToolUse","tool_name":"Bash"}' | npx mcp-desktop-notification --claude-hook
 
 # Test with verbose output
-echo '{"hook_event_name":"UserPromptSubmit","prompt":"Test prompt"}' | node dist/index.js --claude-hook --verbose
+echo '{"hook_event_name":"UserPromptSubmit","prompt":"Test prompt"}' | npx mcp-desktop-notification --claude-hook --verbose
 
 # Test notification event
-echo '{"hook_event_name":"Notification","message":"Custom message"}' | node dist/index.js --claude-hook
+echo '{"hook_event_name":"Notification","message":"Custom message"}' | npx mcp-desktop-notification --claude-hook
 ```
 
 ## Sound Configuration
@@ -216,14 +176,11 @@ You can specify custom sounds:
 
 ### Adding Your Own Sound
 
-Replace `assets/sound.mp3` with your preferred notification sound:
+For custom sounds, use the `--sound` parameter with a path to your audio file:
 
 ```bash
-# Copy your sound file
-cp ~/my-notification-sound.mp3 assets/sound.mp3
-
-# Rebuild the project
-npm run build
+# Use your custom sound file
+npx mcp-desktop-notification --title "Alert" --message "Custom sound" --sound ~/my-notification-sound.mp3
 ```
 
 ## Development
@@ -272,13 +229,13 @@ Test all three modes:
 
 ```bash
 # 1. Test CLI mode
-node dist/index.js --title "CLI Test" --message "Testing CLI mode"
+npx mcp-desktop-notification --title "CLI Test" --message "Testing CLI mode"
 
 # 2. Test MCP server (starts server, use Ctrl+C to stop)
-node dist/index.js --server
+npx mcp-desktop-notification --server
 
 # 3. Test Claude hook
-echo '{"hook_event_name":"PostToolUse","tool_name":"TestTool"}' | node dist/index.js --claude-hook
+echo '{"hook_event_name":"PostToolUse","tool_name":"TestTool"}' | npx mcp-desktop-notification --claude-hook
 ```
 
 ## Platform Support
@@ -326,6 +283,61 @@ echo '{"hook_event_name":"PostToolUse","tool_name":"TestTool"}' | node dist/inde
 2. Use `--verbose` flag to see debug output
 3. Ensure hook command has execution permissions
 4. Check Claude Code hook configuration
+
+## Publishing to npm
+
+### Prerequisites for Publishing
+
+1. Create an npm account at [npmjs.com](https://www.npmjs.com/)
+2. Login to npm from your terminal:
+   ```bash
+   npm login
+   ```
+
+### Publishing Steps
+
+1. **Update version number** in `package.json`:
+   ```bash
+   npm version patch  # for bug fixes
+   npm version minor  # for new features
+   npm version major  # for breaking changes
+   ```
+
+2. **Build the project**:
+   ```bash
+   npm run build
+   ```
+
+3. **Run tests** to ensure everything works:
+   ```bash
+   npm test
+   ```
+
+4. **Publish to npm**:
+   ```bash
+   npm publish --access public
+   ```
+
+### First-time Publishing
+
+If the package name is already taken, you'll need to either:
+- Choose a different name in `package.json`
+- Use a scoped package name: `@yourusername/mcp-desktop-notification`
+
+For scoped packages:
+```bash
+npm publish --access public  # Required for first publish of scoped packages
+```
+
+### Verifying Publication
+
+After publishing, verify your package is available:
+```bash
+npm view mcp-desktop-notification
+
+# Test installation
+npx mcp-desktop-notification --title "Test" --message "Package published!"
+```
 
 ## Contributing
 
