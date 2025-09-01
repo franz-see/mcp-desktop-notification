@@ -131,7 +131,13 @@ export async function processClaudeHook(verbose: boolean = false, noSound: boole
     console.debug(`[mcp-desktop-notification] Received hook input: ${input}`);
   }
 
-  const hookInput: ClaudeHookInput = JSON.parse(input);
+  let hookInput: ClaudeHookInput;
+  try {
+    hookInput = JSON.parse(input);
+  } catch (error) {
+    console.error(`[mcp-desktop-notification] Error: ${error}. input = ${input}`)
+    throw error
+  }
 
   if (verbose) {
     console.debug(`[mcp-desktop-notification] Parsed hook event: ${hookInput.hook_event_name}, Tool: ${hookInput.tool_name}`);
