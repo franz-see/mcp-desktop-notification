@@ -7,7 +7,7 @@ import {
 import { sendNotification } from './notification';
 import { NotificationRequest } from './types';
 
-export async function runMCPServer(): Promise<void> {
+export async function runMCPServer(noSound: boolean = false): Promise<void> {
   const server = new Server(
     {
       name: 'desktop-notification',
@@ -52,7 +52,8 @@ export async function runMCPServer(): Promise<void> {
       const req = args as unknown as NotificationRequest;
 
       try {
-        await sendNotification(req.title, req.message, '', '@sound.mp3');
+        const sound = noSound ? null : '@sound.mp3';
+        await sendNotification(req.title, req.message, '', sound);
         
         return {
           content: [

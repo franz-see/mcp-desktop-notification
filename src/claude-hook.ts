@@ -5,13 +5,13 @@ import path from 'path';
 export interface NotificationContent {
   title: string;
   message: string;
-  sound: string;
+  sound: string | null;
 }
 
-export function getNotificationContent(hookInput: ClaudeHookInput): NotificationContent {
+export function getNotificationContent(hookInput: ClaudeHookInput, noSound: boolean = false): NotificationContent {
   let title: string;
   let message: string;
-  const sound = '@sound.mp3';
+  const sound = noSound ? null : '@sound.mp3';
 
   // Format CWD for display
   const formatCwd = (cwd: string): string => {
@@ -124,7 +124,7 @@ export function getNotificationContent(hookInput: ClaudeHookInput): Notification
   return { title, message, sound };
 }
 
-export async function processClaudeHook(verbose: boolean = false): Promise<void> {
+export async function processClaudeHook(verbose: boolean = false, noSound: boolean = false): Promise<void> {
   const input = await readStdin();
 
   if (verbose) {
@@ -137,10 +137,10 @@ export async function processClaudeHook(verbose: boolean = false): Promise<void>
     console.debug(`[mcp-desktop-notification] Parsed hook event: ${hookInput.hook_event_name}, Tool: ${hookInput.tool_name}`);
   }
 
-  const { title, message, sound } = getNotificationContent(hookInput);
+  const { title, message, sound } = getNotificationContent(hookInput, noSound);
 
   if (verbose) {
-    console.debug(`[mcp-desktop-notification] Sending notification: Title='${title}', Message='${message}', Sound='${sound}'`);
+    console.debug(`[mcp-desktop-notification] Sending notification: Title='${title}', Message='${message}', Sound='${sound === null ? 'DISABLED' : sound}'`);
   }
 
   await sendNotification(title, message, '', sound);

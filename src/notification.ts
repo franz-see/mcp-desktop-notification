@@ -5,17 +5,20 @@ export async function sendNotification(
   title: string,
   message: string,
   icon?: string,
-  sound?: string
+  sound?: string | null
 ): Promise<void> {
-  const soundToPlay = sound || '@sound.mp3';
-
-  if (sound && sound !== '@sound.mp3') {
-    console.log(`[mcp-desktop-notification] Using custom sound: ${sound}`);
-  }
-
-  const soundPromise = playSound(soundToPlay).catch((err) => {
-    console.warn(`[mcp-desktop-notification] Warning: Failed to play sound: ${err}`);
-  });
+  // If sound is null, skip playing sound entirely
+  const soundPromise = sound === null 
+    ? Promise.resolve()
+    : (() => {
+        const soundToPlay = sound || '@sound.mp3';
+        if (sound && sound !== '@sound.mp3') {
+          console.log(`[mcp-desktop-notification] Using custom sound: ${sound}`);
+        }
+        return playSound(soundToPlay).catch((err) => {
+          console.warn(`[mcp-desktop-notification] Warning: Failed to play sound: ${err}`);
+        });
+      })();
 
   const notificationPromise = new Promise<void>((resolve, reject) => {
     notifier.notify({

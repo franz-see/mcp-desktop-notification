@@ -17,6 +17,7 @@ program
   .option('-m, --message <message>', 'Message content of the notification')
   .option('-i, --icon <icon>', 'Path to icon file (optional)')
   .option('-s, --sound <sound>', 'Sound to play: "beep", "system", "beep:frequency", or path to audio file')
+  .option('--no-sound', 'Disable sound (overrides -s/--sound option)')
   .option('--server', 'Run as MCP server on stdio')
   .option('--claude-hook', 'Run as Claude Code hook processor (reads JSON from stdin)')
   .option('--verbose', 'Show verbose output for debugging');
@@ -27,13 +28,16 @@ const options = program.opts();
 
 async function main() {
   try {
+    // Commander.js sets options.sound = false when --no-sound is used
+    const noSound = options.sound === false;
+    
     if (options.claudeHook) {
-      await processClaudeHook(options.verbose);
+      await processClaudeHook(options.verbose, noSound);
       return;
     }
 
     if (options.server) {
-      await runMCPServer();
+      await runMCPServer(noSound);
       return;
     }
 
@@ -43,7 +47,7 @@ async function main() {
       process.exit(1);
     }
 
-    const sound = options.sound || '@sound.mp3';
+    const sound = noSound ? null : (options.sound || '@sound.mp3');
     await sendNotification(options.title, options.message, options.icon, sound);
     console.log(`[mcp-desktop-notification] Notification sent successfully: '${options.title}'`);
     
