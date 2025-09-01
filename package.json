@@ -1,6 +1,6 @@
 {
   "name": "mcp-desktop-notification",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "MCP Desktop Notification Server in TypeScript",
   "license": "ISC",
   "author": "",
@@ -15,8 +15,11 @@
     "test": "jest"
   },
   "bin": {
-    "mcp-desktop-notification": "./dist/index.js"
+    "mcp-desktop-notification": "dist/index.js"
   },
+  "files": [
+    "dist/**/*.js"
+  ],
   "keywords": [
     "mcp",
     "desktop",
