@@ -158,6 +158,27 @@ You can ask Claude to:
 
 Integrate with Claude Code to receive notifications for various events during your coding session.
 
+#### Opencode Plugin
+
+For Opencode users, you can use this plugin to get notifications when instructions complete or when permission is needed:
+
+```typescript
+import type { Plugin } from "@opencode-ai/plugin"
+
+export const NotificationPlugin = async ({ project, client, $, directory, worktree }) => {
+  return {
+    event: async ({ event }) => {
+      // Send notification on session completion
+      if (event.type === "session.idle") {
+        await $`npx mcp-desktop-notification --title "Opencode" --message "Instruction complete. Dir: ${directory}`.quiet()
+      } else if (event.type === "permission.updated") {
+        await $`npx mcp-desktop-notification --title "Opencode" --message "Permission needed. Dir: ${directory}`.quiet()
+      }
+    },
+  }
+}
+```
+
 #### Setup Claude Code Hooks
 
 1. In Claude Code, configure hooks in your settings
